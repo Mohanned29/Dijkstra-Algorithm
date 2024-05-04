@@ -18,7 +18,7 @@ public class Graph {
         final Map<Integer, Vertex> previous = new HashMap<>();
         PriorityQueue<Vertex> nodes = new PriorityQueue<>();
 
-        for (Integer vertex : vertices.keySet()) {
+        vertices.keySet().forEach(vertex -> {
             if (vertex == start) {
                 distances.put(vertex, 0);
                 nodes.add(new Vertex(vertex, 0));
@@ -27,20 +27,17 @@ public class Graph {
                 nodes.add(new Vertex(vertex, Integer.MAX_VALUE));
             }
             previous.put(vertex, null);
-        }
+        });
 
         while (!nodes.isEmpty()) {
             Vertex smallest = nodes.poll();
             if (smallest.id == finish) {
-                final List<Integer> path = new ArrayList<>();
-                Integer current = finish;
-                while (current != null) {
-                    path.add(current);
-                    current = previous.get(current) != null ? previous.get(current).id : null;
+                lastComputedPath = new ArrayList<>();
+                for (Integer at = finish; at != null; at = previous.get(at) == null ? null : previous.get(at).id) {
+                    lastComputedPath.add(at);
                 }
-                Collections.reverse(path);
-                lastComputedPath = path;
-                return path;
+                Collections.reverse(lastComputedPath);
+                return lastComputedPath;
             }
 
             for (Vertex neighbor : vertices.get(smallest.id)) {
@@ -48,19 +45,11 @@ public class Graph {
                 if (alt < distances.get(neighbor.id)) {
                     distances.put(neighbor.id, alt);
                     previous.put(neighbor.id, smallest);
-
-                    for (Vertex n : nodes) {
-                        if (n.id == neighbor.id) {
-                            nodes.remove(n);
-                            break;
-                        }
-                    }
-                    nodes.add(new Vertex(neighbor.id, alt));
+                    nodes.add(new Vertex(neighbor.id, distances.get(neighbor.id)));
                 }
             }
         }
-
-        lastComputedPath = new ArrayList<>();
+        lastComputedPath.clear();
         return lastComputedPath;
     }
 

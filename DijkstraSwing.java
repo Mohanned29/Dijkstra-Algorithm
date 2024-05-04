@@ -1,37 +1,34 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.util.List;
 
 public class DijkstraSwing extends JFrame {
-    private final Graph graph;
+    private Graph graph;
     private GraphPanel graphPanel;
     private JLabel resultLabel;
 
     public DijkstraSwing(Graph graph) {
         this.graph = graph;
-        setTitle("Dijkstra's Algorithm Visualization");
-        setSize(800, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
-        initComponents();
-        setLocationRelativeTo(null);
-        setVisible(true);
+        initUI();
     }
 
-    private void initComponents() {
+    private void initUI() {
+        setTitle("Dijkstra's Algorithm with Modern UI");
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(new Dimension(800, 600));
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
+
+        graphPanel = new GraphPanel(graph);
+        add(graphPanel, BorderLayout.CENTER);
+
         JPanel controlPanel = new JPanel();
         controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
         controlPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-        JTextField startField = new JTextField();
-        JTextField finishField = new JTextField();
+        JTextField startField = new JTextField(5);
+        JTextField finishField = new JTextField(5);
         JButton runButton = new JButton("Run Dijkstra");
-        resultLabel = new JLabel("Result will appear here", JLabel.CENTER);
-
-        runButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        startField.setMaximumSize(new Dimension(Integer.MAX_VALUE, startField.getPreferredSize().height));
-        finishField.setMaximumSize(new Dimension(Integer.MAX_VALUE, finishField.getPreferredSize().height));
+        resultLabel = new JLabel("Path will appear here", JLabel.CENTER);
 
         controlPanel.add(new JLabel("Start Vertex:"));
         controlPanel.add(startField);
@@ -40,21 +37,22 @@ public class DijkstraSwing extends JFrame {
         controlPanel.add(runButton);
         controlPanel.add(resultLabel);
 
-        runButton.addActionListener((ActionEvent e) -> {
+        add(controlPanel, BorderLayout.EAST);
+
+        runButton.addActionListener(e -> {
             try {
-                int start = Integer.parseInt(startField.getText().trim());
-                int finish = Integer.parseInt(finishField.getText().trim());
+                int start = Integer.parseInt(startField.getText());
+                int finish = Integer.parseInt(finishField.getText());
                 List<Integer> path = graph.getShortestPath(start, finish);
                 resultLabel.setText("Shortest Path: " + path.toString());
                 graphPanel.repaint();
             } catch (NumberFormatException ex) {
-                resultLabel.setText("Invalid input. Please enter numbers.");
+                JOptionPane.showMessageDialog(this, "Please enter valid integers for start and finish vertices.", "Input Error", JOptionPane.ERROR_MESSAGE);
             }
         });
+    }
 
-        add(controlPanel, BorderLayout.EAST);
-
-        graphPanel = new GraphPanel(graph);
-        add(graphPanel, BorderLayout.CENTER);
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new DijkstraSwing(new Graph()));
     }
 }

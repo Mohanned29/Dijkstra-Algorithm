@@ -27,7 +27,6 @@ public class GraphPanel extends JPanel {
             {50, 300}
         };
 
-        // Draw vertices
         g.setColor(Color.BLUE);
         for (int i = 0; i < positions.length; i++) {
             g.fillOval(positions[i][0] - radius, positions[i][1] - radius, 2 * radius, 2 * radius);
@@ -36,7 +35,6 @@ public class GraphPanel extends JPanel {
             g.setColor(Color.BLUE);
         }
 
-        // Draw edges
         g.setColor(Color.GRAY);
         drawEdge(g, positions, 1, 2);
         drawEdge(g, positions, 2, 3);
