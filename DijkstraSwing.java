@@ -13,7 +13,7 @@ public class DijkstraSwing extends JFrame {
     }
 
     private void initUI() {
-        setTitle("Dijkstra's Algorithm with Modern UI");
+        setTitle("Dijkstra's Algorithm Visualization");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(new Dimension(800, 600));
         setLocationRelativeTo(null);
@@ -50,9 +50,8 @@ public class DijkstraSwing extends JFrame {
                 JOptionPane.showMessageDialog(this, "Please enter valid integers for start and finish vertices.", "Input Error", JOptionPane.ERROR_MESSAGE);
             }
         });
+
+        setVisible(true);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new DijkstraSwing(new Graph()));
-    }
 }
